@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { LoginButton } from "@/components/ui/login-button";
+import { SigninButton } from "@/components/ui/signin-button";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./lib/nextAuth";
+import { authOptions } from "@/lib/nextAuth";
+import { SignoutButton } from "@/components/ui/signout-button";
+
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
@@ -11,9 +13,16 @@ export default async function Home() {
     <main className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
       <h1>Auth</h1>
       <div>
-        <LoginButton link="/api/auth/signin">
-          <Button>Sign in</Button>
-        </LoginButton>
+        {session?.user && (
+          <SignoutButton>
+            <Button>Sign out</Button>
+          </SignoutButton>
+        )}
+        {!session?.user && (
+          <SigninButton>
+            <Button>Sign in</Button>
+          </SigninButton>
+        )}
       </div>
     </main>
   );
