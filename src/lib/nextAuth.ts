@@ -31,10 +31,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        const user: User = {
-          id: "unknown",
-        };
-
         try {
           const res = await axios.post(
             "/auth/signin",
@@ -45,13 +41,28 @@ export const authOptions: NextAuthOptions = {
             },
             { baseURL: process.env.NEXT_PUBLIC_API }
           );
-          user.id = Date.now().toString();
+          console.log("[credentials provider]", "[authorize]", res.data.data);
+          const {
+            data: { user: _user, ...rest },
+          } = res.data;
+
+          if (_user) {
+            const { userId: id, email, teamId } = _user;
+            const user = { id, email, teamId, ...rest };
+
+            return user;
+          }
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {
+            console.log(
+              "[credentials provider]",
+              "[authorize]",
+              error.response.data
+            );
           }
         }
 
-        return user;
+        return null;
       },
     }),
     GoogleProvider({
