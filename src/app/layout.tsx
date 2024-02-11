@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { siteConfig } from "@/config/site";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "site default title",
-    template: "site title template",
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "site description",
+  description: siteConfig.description,
   icons: [
     {
       url: "/logo.svg",
